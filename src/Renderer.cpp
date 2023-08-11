@@ -27,15 +27,17 @@ void Renderer::createInstance() {
 void Renderer::requestAdapterAndDevice() {
 	instance.RequestAdapter(
 		nullptr,
-		[](const WGPURequestAdapterStatus status, const WGPUAdapter adapter, const char* message, void* userData) {
+		[](WGPURequestAdapterStatus status, WGPUAdapter adapter, const char*, void* userData) {
 			if (status != WGPURequestAdapterStatus_Success) return;
 
-			Renderer& renderer = *(Renderer*) userData;
+			Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
 			renderer.adapter = wgpu::Adapter::Acquire(adapter);
 			renderer.adapter.RequestDevice(
 				nullptr,
-				[](const WGPURequestDeviceStatus status, const WGPUDevice device, const char* message, void* userData) {
-					Renderer& renderer = *(Renderer*) userData;
+				[](WGPURequestDeviceStatus status, WGPUDevice device, const char*, void* userData) {
+					if (status != WGPURequestDeviceStatus_Success) return;
+
+					Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
 
 					renderer.device = wgpu::Device::Acquire(device);
 					renderer.adapterAndDeviceCallback(renderer);

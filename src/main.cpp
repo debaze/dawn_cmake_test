@@ -50,7 +50,7 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule);
 
 	auto render = [](void* userData) {
-		Renderer& renderer = *(Renderer*) userData;
+		Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
 
 		wgpu::RenderPassColorAttachment colorAttachment {
 			.view = renderer.getSwapChain().GetCurrentTextureView(),
