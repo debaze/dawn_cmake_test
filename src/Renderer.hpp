@@ -14,6 +14,8 @@ class Renderer {
 		wgpu::RenderPipeline renderPipeline;
 
 	public:
+		~Renderer();
+
 		const wgpu::SwapChain& getSwapChain() const;
 		const wgpu::Device& getDevice() const;
 		const wgpu::RenderPipeline& getRenderPipeline() const;
@@ -26,6 +28,4 @@ class Renderer {
 		void createSwapChain();
 		wgpu::ShaderModule createShaderModule(const char* source);
 		void createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule);
-
-		~Renderer();
 };

@@ -30,12 +30,12 @@ void Renderer::requestAdapterAndDevice() {
 		[](const WGPURequestAdapterStatus status, const WGPUAdapter adapter, const char* message, void* userData) {
 			if (status != WGPURequestAdapterStatus_Success) return;
 
-			Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
+			Renderer& renderer = *(Renderer*) userData;
 			renderer.adapter = wgpu::Adapter::Acquire(adapter);
 			renderer.adapter.RequestDevice(
 				nullptr,
 				[](const WGPURequestDeviceStatus status, const WGPUDevice device, const char* message, void* userData) {
-					Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
+					Renderer& renderer = *(Renderer*) userData;
 
 					renderer.device = wgpu::Device::Acquire(device);
 					renderer.adapterAndDeviceCallback(renderer);
@@ -48,7 +48,18 @@ void Renderer::requestAdapterAndDevice() {
 }
 
 void Renderer::createSurface() {
-	surface = wgpu::glfw::CreateSurfaceForWindow(instance, window);
+	#ifdef EMSCRIPTEN
+		wgpu::SurfaceDescriptorFromCanvasHTMLSelector canvasDescriptor {};
+		canvasDescriptor.selector = "#canvas";
+
+		wgpu::SurfaceDescriptor surfaceDescriptor {
+			.nextInChain = &canvasDescriptor,
+		};
+
+		surface = instance.CreateSurface(&surfaceDescriptor);
+	#else
+		surface = wgpu::glfw::CreateSurfaceForWindow(instance, window);
+	#endif
 }
 
 void Renderer::createSwapChain() {
