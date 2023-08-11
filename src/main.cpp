@@ -3,7 +3,11 @@
 
 #include <GLFW/glfw3.h>
 #include <webgpu/webgpu_cpp.h>
-#include <webgpu/webgpu_glfw.h>
+#ifdef EMSCRIPTEN
+	#include <emscripten/emscripten.h>
+#else
+	#include <webgpu/webgpu_glfw.h>
+#endif
 
 #include "utils.cpp"
 #include "Renderer.cpp"
@@ -45,7 +49,9 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 
 	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule);
 
-	auto render = [=]() {
+	auto render = [](void* userData) {
+		Renderer& renderer = *(Renderer*) userData;
+
 		wgpu::RenderPassColorAttachment colorAttachment {
 			.view = renderer.getSwapChain().GetCurrentTextureView(),
 			.loadOp = wgpu::LoadOp::Clear,
@@ -68,13 +74,17 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 		renderer.getDevice().GetQueue().Submit(1, &commandBuffer);
 	};
 
-	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
+	#ifdef EMSCRIPTEN
+		emscripten_set_main_loop_arg(render, (void*) &renderer, 0, false);
+	#else
+		while (!glfwWindowShouldClose(window)) {
+			glfwPollEvents();
 
-		render();
+			render((void*) &renderer);
 
-		renderer.getSwapChain().Present();
-	}
+			renderer.getSwapChain().Present();
+		}
+	#endif
 };
 
 int main() {
