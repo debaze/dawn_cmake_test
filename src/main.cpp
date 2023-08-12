@@ -19,11 +19,9 @@ const char* WINDOW_TITLE = "WebGPU";
 Renderer renderer;
 
 auto adapterAndDeviceCallback = [](Renderer& renderer) {
-	if (!glfwInit()) return;
-
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
 	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
+
 	renderer.setWindow(window);
 	renderer.createSurface();
 	renderer.createSwapChain();
@@ -84,10 +82,14 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 
 			renderer.getSwapChain().Present();
 		}
+
+		glfwTerminate();
 	#endif
 };
 
 int main() {
+	if (!glfwInit()) return -1;
+
 	renderer.setAdapterAndDeviceCallback(adapterAndDeviceCallback);
 	renderer.createInstance();
 	renderer.requestAdapterAndDevice();

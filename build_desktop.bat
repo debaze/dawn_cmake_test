@@ -2,3 +2,4 @@
 
 cmake -B build/desktop
 cmake --build build/desktop
+pause

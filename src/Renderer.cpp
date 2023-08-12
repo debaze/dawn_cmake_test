@@ -52,7 +52,7 @@ void Renderer::requestAdapterAndDevice() {
 void Renderer::createSurface() {
 	#ifdef EMSCRIPTEN
 		wgpu::SurfaceDescriptorFromCanvasHTMLSelector canvasDescriptor {};
-		canvasDescriptor.selector = "#canvas";
+		canvasDescriptor.selector = "#output";
 
 		wgpu::SurfaceDescriptor surfaceDescriptor {
 			.nextInChain = &canvasDescriptor,
