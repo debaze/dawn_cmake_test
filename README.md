@@ -8,6 +8,30 @@ git clone --recurse-submodules git@github.com:matteokeole/dawn_cmake_test.git
 
 Make sure you have [Cmake](https://cmake.org/download) and [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) installed, as well as a C/C++ compiler.
 
+### Project structure
+
+```sh
+├─ 📂 build
+├─ 📂 src
+│  └─ 📄 main.cpp
+├─ 📂 vendor
+│  └─ 📁 dawn
+├─ 📂 web
+│  ├─ 📁 assets
+│  │  ├─ 📁 css
+│  │  │  └─ 📄 main.css
+│  │  └─ 📁 js
+│  │     └─ 📄 main.js
+│  └─ 📄 index.html
+├─ 📄 .gitignore
+├─ 📄 .gitmodules
+├─ 📄 build_desktop.bat
+├─ 📄 build_web.bat
+├─ 📄 CMakeLists.txt
+├─ 📄 LICENSE
+└─ 📃 README.md
+```
+
 ### Building & running
 
 #### Desktop
