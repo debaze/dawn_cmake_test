@@ -6,7 +6,7 @@ add_executable(app "src/main.cpp")
 
 if (EMSCRIPTEN)
 	set_target_properties(app PROPERTIES OUTPUT_NAME "build" SUFFIX ".js")
-	target_link_options(app PRIVATE "-O3" "-fexceptions" "-sEXPORT_ES6" "-sUSE_WEBGPU" "-sUSE_GLFW=3")
+	target_link_options(app PRIVATE "-O3" "-fexceptions" "-sEXPORT_ES6" "-sUSE_WEBGPU" "-sUSE_GLFW=3" "--embed-file=../../src@")
 else()
 	set(DAWN_FETCH_DEPENDENCIES ON)
 	add_subdirectory("vendor/dawn" EXCLUDE_FROM_ALL)

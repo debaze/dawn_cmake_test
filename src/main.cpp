@@ -26,24 +26,10 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 	renderer.createSurface();
 	renderer.createSwapChain();
 
-	wgpu::ShaderModule vertexShaderModule = renderer.createShaderModule(R"(
-		const VERTICES: array<vec2f, 3> = array(
-			vec2f(-.75, -.75),
-			vec2f( 0,    .75),
-			vec2f( .75, -.75),
-		);
-
-		@vertex
-		fn main(@builtin(vertex_index) vertex_index: u32) -> @builtin(position) vec4f {
-			return vec4f(VERTICES[vertex_index], 0, 1);
-		}
-	)");
-	wgpu::ShaderModule fragmentShaderModule = renderer.createShaderModule(R"(
-		@fragment
-		fn main() -> @location(0) vec4f {
-			return vec4f(1);
-		}
-	)");
+	char* shaderSource = readFile("shaders/vertex.wgsl");
+	wgpu::ShaderModule vertexShaderModule = renderer.createShaderModule(shaderSource);
+	shaderSource = readFile("shaders/fragment.wgsl");
+	wgpu::ShaderModule fragmentShaderModule = renderer.createShaderModule(shaderSource);
 
 	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule);
 
