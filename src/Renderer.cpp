@@ -12,6 +12,10 @@ const wgpu::RenderPipeline& Renderer::getRenderPipeline() const {
 	return renderPipeline;
 }
 
+const wgpu::Buffer& Renderer::getBuffer(uint32_t id) const {
+	return buffers.at(id);
+}
+
 void Renderer::setAdapterAndDeviceCallback(void (*callback)(Renderer& renderer)) {
 	adapterAndDeviceCallback = callback;
 }
@@ -92,7 +96,7 @@ wgpu::ShaderModule Renderer::createShaderModule(const char* source) {
 	return device.CreateShaderModule(&shaderModuleDescriptor);
 }
 
-void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule) {
+void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule, const wgpu::VertexBufferLayout& vertexBufferLayout) {
 	this->vertexShaderModule = vertexShaderModule;
 	this->fragmentShaderModule = fragmentShaderModule;
 
@@ -111,6 +115,8 @@ void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu
 		.vertex = {
 			.module = vertexShaderModule,
 			.entryPoint = "main",
+			.bufferCount = 1,
+			.buffers = &vertexBufferLayout,
 		},
 		.fragment = &fragmentState,
 	};
@@ -118,13 +124,14 @@ void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu
 	renderPipeline = device.CreateRenderPipeline(&renderPipelineDescriptor);
 }
 
+wgpu::Buffer Renderer::createBuffer(const wgpu::BufferDescriptor& descriptor) {
+	wgpu::Buffer buffer = device.CreateBuffer(&descriptor);
+
+	buffers.push_back(buffer);
+
+	return buffer;
+}
+
 Renderer::~Renderer() {
-	renderPipeline.Release();
-	vertexShaderModule.Release();
-	fragmentShaderModule.Release();
-	swapChain.Release();
-	surface.Release();
-	device.Release();
-	adapter.Release();
-	instance.Release();
+	device.Destroy();
 }

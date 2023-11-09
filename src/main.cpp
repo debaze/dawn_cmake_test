@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #include <GLFW/glfw3.h>
 #include <webgpu/webgpu_cpp.h>
@@ -31,7 +32,35 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 	shaderSource = readFile("shaders/fragment.wgsl");
 	wgpu::ShaderModule fragmentShaderModule = renderer.createShaderModule(shaderSource);
 
-	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule);
+	wgpu::BufferDescriptor bufferDescriptor {
+		.usage = wgpu::BufferUsage::Vertex | wgpu::BufferUsage::CopyDst,
+		.size = 24,
+	};
+	wgpu::Buffer vertexBuffer = renderer.createBuffer(bufferDescriptor);
+
+	int8_t data[6] = {
+	   -1, -1,
+		0,  1,
+		1, -1,
+	};
+
+	renderer.getDevice().GetQueue().WriteBuffer(vertexBuffer, 0, data, 8);
+
+	wgpu::VertexAttribute vertexAttribute {
+		.format = wgpu::VertexFormat::Float32x2,
+		.offset = 0,
+		.shaderLocation = 0,
+	};
+
+	wgpu::VertexBufferLayout vertexBufferLayout {
+		.arrayStride = sizeof(float) * 2,
+		.stepMode = wgpu::VertexStepMode::Vertex,
+		.attributeCount = 1,
+		.attributes = &vertexAttribute,
+	};
+
+	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule, vertexBufferLayout);
+	renderer.vertexBuffer = vertexBuffer;
 
 	auto render = [](void* userData) {
 		Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
@@ -51,6 +80,7 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 		wgpu::RenderPassEncoder renderPass = commandEncoder.BeginRenderPass(&renderPassDescriptor);
 
 		renderPass.SetPipeline(renderer.getRenderPipeline());
+		renderPass.SetVertexBuffer(0, renderer.vertexBuffer, 0, sizeof(float) * 6);
 		renderPass.Draw(3);
 		renderPass.End();
 

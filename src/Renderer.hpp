@@ -12,6 +12,9 @@ class Renderer {
 		wgpu::ShaderModule vertexShaderModule;
 		wgpu::ShaderModule fragmentShaderModule;
 		wgpu::RenderPipeline renderPipeline;
+		std::vector<wgpu::Buffer> buffers;
+	public:
+		wgpu::Buffer vertexBuffer;
 
 	public:
 		~Renderer();
@@ -21,11 +24,13 @@ class Renderer {
 		const wgpu::RenderPipeline& getRenderPipeline() const;
 		void setAdapterAndDeviceCallback(void (*callback)(Renderer& renderer));
 		void setWindow(GLFWwindow* window);
+		const wgpu::Buffer& getBuffer(uint32_t id) const;
 
 		void createInstance();
 		void requestAdapterAndDevice();
 		void createSurface();
 		void createSwapChain();
 		wgpu::ShaderModule createShaderModule(const char* source);
-		void createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule);
+		void createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule, const wgpu::VertexBufferLayout& vertexBufferLayout);
+		wgpu::Buffer createBuffer(const wgpu::BufferDescriptor& descriptor);
 };

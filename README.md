@@ -41,7 +41,3 @@ Build the app with the [desktop script](https://github.com/matteokeole/dawn_cmak
 #### Web
 
 Build the app with the [web build script](https://github.com/matteokeole/dawn_cmake_test/blob/main/build_web.bat). Then, start a local web server and open [web/index.html](https://github.com/matteokeole/dawn_cmake_test/blob/main/web/index.html).
-
-> #### Dawn version note
-> 
-> This test uses the [`chromium/5895`](https://dawn.googlesource.com/dawn/+/refs/heads/chromium/5895) branch of the [Dawn repository](https://dawn.googlesource.com/dawn/). The CMake build was failing on the 5896 and the 5932 was too heavy.
