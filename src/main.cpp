@@ -27,9 +27,9 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 	renderer.createSurface();
 	renderer.createSwapChain();
 
-	const char* shaderSource = readFile("../../../src/shaders/vertex.wgsl");
+	const char* shaderSource = readFile("shaders/vertex.wgsl");
 	wgpu::ShaderModule vertexShaderModule = renderer.createShaderModule(shaderSource);
-	shaderSource = readFile("../../../src/shaders/fragment.wgsl");
+	shaderSource = readFile("shaders/fragment.wgsl");
 	wgpu::ShaderModule fragmentShaderModule = renderer.createShaderModule(shaderSource);
 
 	/* wgpu::BufferDescriptor bufferDescriptor {
