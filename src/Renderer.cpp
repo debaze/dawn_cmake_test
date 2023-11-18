@@ -12,9 +12,9 @@ const wgpu::RenderPipeline& Renderer::getRenderPipeline() const {
 	return renderPipeline;
 }
 
-const wgpu::Buffer& Renderer::getBuffer(uint32_t id) const {
+/* const wgpu::Buffer& Renderer::getBuffer(uint32_t id) const {
 	return buffers.at(id);
-}
+} */
 
 void Renderer::setAdapterAndDeviceCallback(void (*callback)(Renderer& renderer)) {
 	adapterAndDeviceCallback = callback;
@@ -32,14 +32,18 @@ void Renderer::requestAdapterAndDevice() {
 	instance.RequestAdapter(
 		nullptr,
 		[](WGPURequestAdapterStatus status, WGPUAdapter adapter, const char*, void* userData) {
-			if (status != WGPURequestAdapterStatus_Success) return;
+			if (status != WGPURequestAdapterStatus_Success) {
+				exit(EXIT_FAILURE);
+			}
 
 			Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
 			renderer.adapter = wgpu::Adapter::Acquire(adapter);
 			renderer.adapter.RequestDevice(
 				nullptr,
 				[](WGPURequestDeviceStatus status, WGPUDevice device, const char*, void* userData) {
-					if (status != WGPURequestDeviceStatus_Success) return;
+					if (status != WGPURequestDeviceStatus_Success) {
+						exit(EXIT_FAILURE);
+					}
 
 					Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
 
@@ -96,7 +100,7 @@ wgpu::ShaderModule Renderer::createShaderModule(const char* source) {
 	return device.CreateShaderModule(&shaderModuleDescriptor);
 }
 
-void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule, const wgpu::VertexBufferLayout& vertexBufferLayout) {
+void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu::ShaderModule& fragmentShaderModule /*, const wgpu::VertexBufferLayout& vertexBufferLayout */) {
 	this->vertexShaderModule = vertexShaderModule;
 	this->fragmentShaderModule = fragmentShaderModule;
 
@@ -115,8 +119,8 @@ void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu
 		.vertex = {
 			.module = vertexShaderModule,
 			.entryPoint = "main",
-			.bufferCount = 1,
-			.buffers = &vertexBufferLayout,
+			// .bufferCount = 1,
+			// .buffers = &vertexBufferLayout,
 		},
 		.fragment = &fragmentState,
 	};
@@ -124,13 +128,13 @@ void Renderer::createRenderPipeline(wgpu::ShaderModule& vertexShaderModule, wgpu
 	renderPipeline = device.CreateRenderPipeline(&renderPipelineDescriptor);
 }
 
-wgpu::Buffer Renderer::createBuffer(const wgpu::BufferDescriptor& descriptor) {
-	wgpu::Buffer buffer = device.CreateBuffer(&descriptor);
+/* wgpu::Buffer Renderer::createBuffer(const wgpu::BufferDescriptor& bufferDescriptor) {
+	wgpu::Buffer buffer = device.CreateBuffer(&bufferDescriptor);
 
 	buffers.push_back(buffer);
 
 	return buffer;
-}
+} */
 
 Renderer::~Renderer() {
 	device.Destroy();

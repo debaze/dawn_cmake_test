@@ -3,7 +3,9 @@
 ### Setup
 
 ```sh
-git clone --recurse-submodules git@github.com:matteokeole/dawn_cmake_test.git
+git clone git@github.com:matteokeole/dawn_cmake_test.git
+cd dawn_cmake_test
+git submodule update --init
 ```
 
 Make sure you have [Cmake](https://cmake.org/download) and [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) installed, as well as a C/C++ compiler.

@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
+// #include <vector>
 
 #include <GLFW/glfw3.h>
 #include <webgpu/webgpu_cpp.h>
@@ -27,12 +27,12 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 	renderer.createSurface();
 	renderer.createSwapChain();
 
-	char* shaderSource = readFile("shaders/vertex.wgsl");
+	const char* shaderSource = readFile("../../../src/shaders/vertex.wgsl");
 	wgpu::ShaderModule vertexShaderModule = renderer.createShaderModule(shaderSource);
-	shaderSource = readFile("shaders/fragment.wgsl");
+	shaderSource = readFile("../../../src/shaders/fragment.wgsl");
 	wgpu::ShaderModule fragmentShaderModule = renderer.createShaderModule(shaderSource);
 
-	wgpu::BufferDescriptor bufferDescriptor {
+	/* wgpu::BufferDescriptor bufferDescriptor {
 		.usage = wgpu::BufferUsage::Vertex | wgpu::BufferUsage::CopyDst,
 		.size = 24,
 	};
@@ -57,10 +57,10 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 		.stepMode = wgpu::VertexStepMode::Vertex,
 		.attributeCount = 1,
 		.attributes = &vertexAttribute,
-	};
+	}; */
 
-	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule, vertexBufferLayout);
-	renderer.vertexBuffer = vertexBuffer;
+	renderer.createRenderPipeline(vertexShaderModule, fragmentShaderModule /*, vertexBufferLayout */);
+	// renderer.vertexBuffer = vertexBuffer;
 
 	auto render = [](void* userData) {
 		Renderer& renderer = *reinterpret_cast<Renderer*>(userData);
@@ -80,7 +80,7 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 		wgpu::RenderPassEncoder renderPass = commandEncoder.BeginRenderPass(&renderPassDescriptor);
 
 		renderPass.SetPipeline(renderer.getRenderPipeline());
-		renderPass.SetVertexBuffer(0, renderer.vertexBuffer, 0, sizeof(float) * 6);
+		// renderPass.SetVertexBuffer(0, renderer.vertexBuffer, 0, sizeof(float) * 6);
 		renderPass.Draw(3);
 		renderPass.End();
 
@@ -104,7 +104,9 @@ auto adapterAndDeviceCallback = [](Renderer& renderer) {
 };
 
 int main() {
-	if (!glfwInit()) return -1;
+	if (!glfwInit()) {
+		exit(EXIT_FAILURE);
+	}
 
 	renderer.setAdapterAndDeviceCallback(adapterAndDeviceCallback);
 	renderer.createInstance();
