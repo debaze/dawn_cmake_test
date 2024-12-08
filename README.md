@@ -3,7 +3,7 @@
 ## Setup
 
 ```sh
-git clone git@github.com:matteokeole/dawn_cmake_test.git
+git clone git@github.com:debaze/dawn_cmake_test.git
 cd dawn_cmake_test
 git submodule update --init
 ```
@@ -38,8 +38,8 @@ Make sure you have [Cmake](https://cmake.org/download) and [Emscripten](https://
 
 ### Desktop
 
-Build the app with the [desktop script](https://github.com/matteokeole/dawn_cmake_test/blob/main/build_desktop.bat). Then, run `build/desktop/Debug/app.exe`.
+Build the app with the [desktop script](https://github.com/debaze/dawn_cmake_test/blob/main/build_desktop.bat). Then, run `build/desktop/Debug/app.exe`.
 
 ### Web
 
-Build the app with the [web build script](https://github.com/matteokeole/dawn_cmake_test/blob/main/build_web.bat). Then, start a local web server and open [web/index.html](https://github.com/matteokeole/dawn_cmake_test/blob/main/web/index.html).
+Build the app with the [web build script](https://github.com/debaze/dawn_cmake_test/blob/main/build_web.bat). Then, start a local web server and open [web/index.html](https://github.com/debaze/dawn_cmake_test/blob/main/web/index.html).
